@@ -1,0 +1,75 @@
+version: '3.7'
+
+volumes:
+  main_conf:
+    name: main_conf
+  main_logs:
+    name: main_logs
+  main_data:
+    name: main_data
+  main_lib:
+    name: main_lib
+  main_uplo:
+    name: main_uplo
+  mysql_data:
+    name: mysql_data
+ 
+services:
+
+  main:
+    hostname: main
+    container_name: main
+    image: ejabberd/ecs:20.12
+    depends_on:
+      - mysql
+    environment:
+      - CTL_ON_CREATE=register admin localhost admin
+      - CTL_ON_START=stats registeredusers ;
+                     status
+    command: ["foreground"]
+    healthcheck:
+      test: netstat -nl | grep -q 5222
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 120
+    ports:
+      - "5222:5222"
+      - "5269:5269"
+      - "5280:5280"
+      - "5443:5443"
+    volumes:
+      - main_conf:/home/ejabberd/conf
+      - main_data:/home/ejabberd/database
+      - main_logs:/home/ejabberd/logs
+      - main_uplo:/home/ejabberd/upload
+      - main_lib:/home/ejabberd/lib
+      - ./ejabberd.yml:/home/ejabberd/conf/ejabberd.yml:ro
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/mysql.sql:/docker-entrypoint-initdb.d/mysql.sql:ro
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 10s
+      retries: 120
+    environment:
+      MYSQL_ROOT_PASSWORD: ejabberd
+      MYSQL_DATABASE: ejabberd
+      MYSQL_USER: ejabberd
+      MYSQL_PASSWORD: ejabberd
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    depends_on:
+      - mysql
+      - main
+    ports:
+      - 8080:8080
