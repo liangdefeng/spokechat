@@ -5,6 +5,8 @@ LABEL maintainer="Peter Liang (defeng.liang.cn@gmail.com)" \
 
 ENV ERLANG_VERSION 21.3.5
 
+ENV PATH=/opt/erlang/$ERLANG_VERSION/bin:$PATH
+
 RUN yum -y update \
 && yum -y install git wget curl automake make openssl-devel \
 && yum -y install automake autoconf ncurses-devel libyaml-devel \

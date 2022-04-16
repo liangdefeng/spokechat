@@ -4,7 +4,7 @@
 Enter the folder where Dockerfile is, run command:
 
 ```
-docker build -t buildserver
+docker build -t buildserver .
 ```
 
 The command will create a docker image called buildserver. We will use the docker image to create a docker in which we compile Ejabberd's source code.
@@ -31,14 +31,8 @@ docker run --rm -v $(pwd):$(pwd) --name buildserver -it buildserver
 
 #### 1.4 Compile Ejabberd's source codes.
 
-###### 1.4.1 After enter the build server, active Erlang
 
-```
-. /opt/erlang/21.3.5/activate
-
-```
-
-###### 1.4.2 compile source codes.
+###### 1.4.1 compile source codes.
 
 ```
 ./autogen.sh
@@ -47,7 +41,7 @@ make
 
 ```
 
-###### 1.4.3 Exit the build server.
+###### 1.4.2 Exit the build server.
 
 ```
 exit
