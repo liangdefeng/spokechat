@@ -11,7 +11,6 @@ RUN yum -y update \
 && yum -y install expat-devel gcc gcc-c++ java xsltproc \
 && git clone https://github.com/kerl/kerl.git /tmp/kerl/ \
 && /tmp/kerl/kerl build $ERLANG_VERSION $ERLANG_VERSION \
-&& /tmp/kerl/kerl install $ERLANG_VERSION /opt/erlang/$ERLANG_VERSION/ \
-&& sh /opt/erlang/21.3.5/activate
+&& /tmp/kerl/kerl install $ERLANG_VERSION /opt/erlang/$ERLANG_VERSION/
 
-ENTRYPOINT ["/bin/sh"]
+CMD /bin/bash
