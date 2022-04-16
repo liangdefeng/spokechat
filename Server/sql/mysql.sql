@@ -478,4 +478,5 @@ CREATE TABLE mqtt_pub (
 
 
 ALTER TABLE spool ADD persist boolean NOT NULL DEFAULT false;
+CREATE INDEX i_spool_p on spool(persist);
 
