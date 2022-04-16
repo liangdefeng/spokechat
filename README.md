@@ -64,23 +64,48 @@ The beam files can be found in ebin folder. We will copy the beam file from the 
 docker-compose up
 ```
 
-The command will start up three docker servers:
- - main: The Ejabberd server.
- - mysql: The MySQL server Ejabberd connects to.
- - adminer: The admin page to view the mysql database.
+The command will start up three docker servers for verification purpose.
 
+ - main: The Ejabberd server.
+ 
+ - mysql: The MySQL server Ejabberd connects to.
+ 
+ - adminer: The admin page to view the mysql database.
+ 
+
+#### Execute SQL(Optional)
+If you want to deploy the module to your existing Ejabberd, before copy the module to your Ejabberd server, run the SQL:
+
+```
+ALTER TABLE spool ADD persist boolean NOT NULL DEFAULT false;
+CREATE INDEX i_spool_p on spool(persist);
+
+```
 
 #### Copy the modified modules to the Ejabberd server.
 
-Example: copy the mod_offline module to the servers.
+Example: copy the mod_offline_sql module to the servers.
 
 ```
-docker cp <where the Ejabberd's repository is checked out>/ebin/mod_offline.beam main:lib/ejabberd-20.12.0/ebin/
+docker cp <where the Ejabberd's repository is checked out>/ebin/mod_offline_sql.beam main:/home/ejabberd/lib/ejabberd-20.12.0/ebin/
 
+```
+The command will copy the mod_offline_sql module to main docker's /home/ejabberd/lib/ejabberd-20.12.0/ebin/ folder.
+
+```
 docker exec -it main bin/ejabberdctl debug
-l(mod_offline).
 
 ```
+
+The command will let us enter Ejabberd's debug mode.
+
+In Ejabberd's debug console, enter:
+
+```
+l(mod_offline_sql).
+```
+
+The command will load the mod_offline_sql into Ejabberd.
 
 #### URLs to access various server.
 
