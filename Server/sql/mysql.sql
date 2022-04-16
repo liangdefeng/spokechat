@@ -476,7 +476,7 @@ CREATE TABLE mqtt_pub (
 ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
-
+-- The SQL to execute on an existing Ejabberd.
 ALTER TABLE spool ADD persist boolean NOT NULL DEFAULT false;
 CREATE INDEX i_spool_p on spool(persist);
 
